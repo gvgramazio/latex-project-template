@@ -12,13 +12,20 @@ jobs:
       FILE: main
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install TeXlive
+        uses: actions/checkout@v3
+      - name: latexmk-action
+        uses: yegor256/latexmk-action@0.7.1
+        with:
+          cmd: latexmk
+          path: ${{ env.FILE }}
+          opts: -pdf
+          #packages: acmart tikz
+      #- name: Install TeXlive
         #run: sudo apt-get update && sudo apt-get install texlive texlive-publishers texlive-science latexmk cm-super
-        run: apt-get update && apt-get -y install latexmk && apt-get clean
-      - name: LaTeX compile
-        working-directory: ${{ env.DIR }}
-        run: latexmk ${{ env.FILE }}
+        #run: apt-get update && apt-get -y install latexmk && apt-get clean
+      #- name: LaTeX compile
+        #working-directory: ${{ env.DIR }}
+        #run: latexmk ${{ env.FILE }}
       - name: move
         run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.FILE }}.pdf ./github_artifacts/
       - name: Upload pdf as artifact
